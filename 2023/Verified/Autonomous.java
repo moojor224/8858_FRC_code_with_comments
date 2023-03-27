@@ -108,7 +108,7 @@ public class Autonomous {
                     // 0.2 speed for 2 seconds
                     break;
                 case SCORE_AND_BALANCE:
-                    
+
                     if (m_state == 0) {
                         m_armMotor.set(-0.3);
                         if (m_timer.get() >= .5 && m_armEncoder.getPosition() >= lastPosition) {
