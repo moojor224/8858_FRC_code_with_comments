@@ -104,8 +104,43 @@ public class Autonomous {
                     }
                     break;
                 case SCORE_AND_COMMUNITY:
-                    // 0.6 speed for 3 seconds then...
-                    // 0.2 speed for 2 seconds
+                    if (m_state == 0) {
+                        m_armMotor.set(-0.3);
+                        if (m_timer.get() >= .5 && m_armEncoder.getPosition() >= lastPosition) {
+                            m_state += 1;
+                            m_timer.reset();
+                        }
+                    } else if (m_state == 1) {
+                        m_intakeMotor.set(-0.75);
+                        if (m_timer.get() >= .45) {
+                            m_state += 1;
+                            m_timer.reset();
+                        }
+                    } else if (m_state == 2) {
+                        m_intakeMotor.set(0.0);
+                        m_armMotor.set(0.2);
+                        if (m_timer.get() >= 2.0) {
+                            m_state += 1;
+                            m_timer.reset();
+                        }
+                    } else if (m_state == 3) {
+                        m_armMotor.set(0.0);
+                        m_differentialDrive.arcadeDrive(-0.6, 0);
+                        if (m_timer.get() >= 3) {
+                            m_state += 1;
+                            m_timer.reset();
+                        }
+                    } else if (m_state == 4) {
+                        m_armMotor.set(0.0);
+                        m_differentialDrive.arcadeDrive(-0.2, 0);
+                        if (m_timer.get() >= 2.0) {
+                            m_state += 1;
+                            m_timer.reset();
+                        }
+                    } else if (m_state == 5) {
+                        m_armMotor.set(0.0);
+                        m_differentialDrive.arcadeDrive(0, 0);
+                    }
                     break;
                 case SCORE_AND_BALANCE:
 
