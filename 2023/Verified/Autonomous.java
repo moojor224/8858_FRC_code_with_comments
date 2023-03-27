@@ -104,6 +104,8 @@ public class Autonomous {
                     }
                     break;
                 case SCORE_AND_COMMUNITY:
+                    // 0.6 speed for 3 seconds then...
+                    // 0.2 speed for 2 seconds
                     break;
                 case SCORE_AND_BALANCE:
                     
