@@ -1,4 +1,4 @@
-My Drive
+
 package frc.robot;
 
 import edu.wpi.first.math.filter.LinearFilter;
@@ -31,7 +31,25 @@ public class Autonomous {
     boolean armIsZero = false;
     double lastPosition;
     int m_state = 0;
-    double Threshold = 10.0;
+
+    // 'Score and...' arm variables
+    double SCORING_ARM_SPEED    = 0.3;  // speed at which the arm reaches out to score
+    double LOWER_ARM_SPEED      = 0.2;  // speed at which the arm retracts after scoring
+    double LOWER_ARM_TIME       = 2.0;  // time that the arm gets lowered
+    double INTAKE_OUTPUT_SPEED  = 0.75; // speed that the intake turns to output in autonomous
+    double INTAKE_OUTPUT_TIME   = 0.45; // amount of time intake runs for in autonomous to
+
+    // 'Score and Community' variables
+    double BACKUP_SPEED         = 0.6;  // set motors to this speed to leave community
+    double BACKUP_TIME          = 4.0;  // drive the motors for this duration of time to leave community
+
+    // 'Score and Ballance' variables
+    double THRESHOLD            = 10.0; // in degrees, threshold angle at which kickback is started
+    double BLIND_DRIVE_SPEED    = 0.7;  // set motor to this power to get to the charge-station
+    double BLIND_DRIVE_TIME     = 2.5;  // drive at BLIND_DRIVE_SPEED for this much time to get to charge station
+    double CLIMB_SPEED          = 0.57; // speed to climb charge station in steady manner
+    double KICKBACK_SPEED       = 0.4;  // set motor to this power during 'kickback' maneuver which should leave the robot balanced
+    double KICKBACK_TIME        = 0.3;  // amount of time to apply KICKBACK_SPEED
 
     public Autonomous(String autonName, CANSparkMax armMotor, CANSparkMax intakeMotor,
             DifferentialDrive differentialDrive, ADIS16470_IMU imu) {
@@ -81,21 +99,21 @@ public class Autonomous {
                 case SCORE_AND_STAY:
                     m_differentialDrive.arcadeDrive(0.0, 0.0);
                     if (m_state == 0) {
-                        m_armMotor.set(-0.2);
+                        m_armMotor.set(-SCORING_ARM_SPEED);
                         if (m_timer.get() >= .5 && m_armEncoder.getPosition() >= lastPosition) {
                             m_state += 1;
                             m_timer.reset();
                         }
                     } else if (m_state == 1) {
-                        m_intakeMotor.set(-0.75);
-                        if (m_timer.get() >= 1.0) {
+                        m_intakeMotor.set(-INTAKE_OUTPUT_SPEED);
+                        if (m_timer.get() >= INTAKE_OUTPUT_TIME) {
                             m_state += 1;
                             m_timer.reset();
                         }
                     } else if (m_state == 2) {
                         m_intakeMotor.set(0.0);
-                        m_armMotor.set(0.2);
-                        if (m_timer.get() >= 2.0) {
+                        m_armMotor.set(LOWER_ARM_SPEED);
+                        if (m_timer.get() >= LOWER_ARM_TIME) {
                             m_state += 1;
                             m_timer.reset();
                         }
@@ -105,39 +123,32 @@ public class Autonomous {
                     break;
                 case SCORE_AND_COMMUNITY:
                     if (m_state == 0) {
-                        m_armMotor.set(-0.3);
+                        m_armMotor.set(-SCORING_ARM_SPEED);
                         if (m_timer.get() >= .5 && m_armEncoder.getPosition() >= lastPosition) {
                             m_state += 1;
                             m_timer.reset();
                         }
                     } else if (m_state == 1) {
-                        m_intakeMotor.set(-0.75);
-                        if (m_timer.get() >= .45) {
+                        m_intakeMotor.set(-INTAKE_OUTPUT_SPEED);
+                        if (m_timer.get() >= INTAKE_OUTPUT_TIME) {
                             m_state += 1;
                             m_timer.reset();
                         }
                     } else if (m_state == 2) {
                         m_intakeMotor.set(0.0);
-                        m_armMotor.set(0.2);
-                        if (m_timer.get() >= 2.0) {
+                        m_armMotor.set(LOWER_ARM_SPEED);
+                        if (m_timer.get() >= LOWER_ARM_TIME) {
                             m_state += 1;
                             m_timer.reset();
                         }
                     } else if (m_state == 3) {
                         m_armMotor.set(0.0);
-                        m_differentialDrive.arcadeDrive(-0.6, 0);
-                        if (m_timer.get() >= 3) {
+                        m_differentialDrive.arcadeDrive(-BACKUP_SPEED, 0);
+                        if (m_timer.get() >= BACKUP_TIME) {
                             m_state += 1;
                             m_timer.reset();
                         }
                     } else if (m_state == 4) {
-                        m_armMotor.set(0.0);
-                        m_differentialDrive.arcadeDrive(-0.2, 0);
-                        if (m_timer.get() >= 2.0) {
-                            m_state += 1;
-                            m_timer.reset();
-                        }
-                    } else if (m_state == 5) {
                         m_armMotor.set(0.0);
                         m_differentialDrive.arcadeDrive(0, 0);
                     }
@@ -145,80 +156,80 @@ public class Autonomous {
                 case SCORE_AND_BALANCE:
 
                     if (m_state == 0) {
-                        m_armMotor.set(-0.3);
+                        m_armMotor.set(-SCORING_ARM_SPEED);
                         if (m_timer.get() >= .5 && m_armEncoder.getPosition() >= lastPosition) {
                             m_state += 1;
                             m_timer.reset();
                         }
                     } else if (m_state == 1) {
-                        m_intakeMotor.set(-0.75);
-                        if (m_timer.get() >= .45) {
+                        m_intakeMotor.set(-INTAKE_OUTPUT_SPEED);
+                        if (m_timer.get() >= INTAKE_OUTPUT_TIME) {
                             m_state += 1;
                             m_timer.reset();
                         }
                     } else if (m_state == 2) {
                         m_intakeMotor.set(0.0);
-                        m_armMotor.set(0.2);
-                        if (m_timer.get() >= 2.0) {
+                        m_armMotor.set(LOWER_ARM_SPEED);
+                        if (m_timer.get() >= LOWER_ARM_TIME) {
                             m_state += 1;
                             m_timer.reset();
                         }
                     } else if (m_state == 3) {
                         m_armMotor.set(0.0);
-                        m_differentialDrive.arcadeDrive(-0.7, 0);
-                        if (m_timer.get() >= 2.5) {
+                        m_differentialDrive.arcadeDrive(-BLIND_DRIVE_SPEED, 0);
+                        if (m_timer.get() >= BLIND_DRIVE_TIME) {
                             m_state += 1;
                             m_timer.reset();
                         }
                     }
-                    // leaning back
+                    // leaning back correction
                     else if (m_state == 4) {
                         m_armMotor.set(0.0);
-                        if (m_imu.getYComplementaryAngle() <= Threshold) {
-                            m_state = 5;
+                        if (m_imu.getYComplementaryAngle() <= THRESHOLD) {
+                            m_state += 1;
                             m_timer.reset();
                         } else {
-                            m_differentialDrive.arcadeDrive(-0.57, 0);
+                            m_differentialDrive.arcadeDrive(-CLIMB_SPEED, 0);
                         }
                     }
                     else if (m_state == 5) {
                         m_armMotor.set(0.0);
-                        if (m_timer.get() >= 0.3) {
-                            m_state = 8;
+                        if (m_timer.get() >= KICKBACK_TIME) {
+                            m_state = 8; // check if we're balanced
                             m_timer.reset();
                             m_differentialDrive.arcadeDrive(.001, 0);
                         } else {
-                            m_differentialDrive.arcadeDrive(0.4, 0);
+                            m_differentialDrive.arcadeDrive(KICKBACK_SPEED, 0);
                         }
                     }
-                    // leaning forward
+                    // leaning forward correction
                     else if (m_state == 6) {
                         m_armMotor.set(0.0);
-                        if (m_imu.getYComplementaryAngle() >= -Threshold) {
-                            m_state = 7;
+                        if (m_imu.getYComplementaryAngle() >= -THRESHOLD) {
+                            m_state += 1;
                             m_timer.reset();
                         } else {
-                            m_differentialDrive.arcadeDrive(0.57, 0);
+                            m_differentialDrive.arcadeDrive(CLIMB_SPEED, 0);
                         }
                     }
                     else if (m_state == 7) {
                         m_armMotor.set(0.0);
-                        if (m_timer.get() >= 0.3) {
-                            m_state = 8;
+                        if (m_timer.get() >= KICKBACK_TIME) {
+                            m_state = 8; // check if we're balanced
                             m_timer.reset();
                             m_differentialDrive.arcadeDrive(.001, 0);
                         } else {
-                            m_differentialDrive.arcadeDrive(-0.4, 0);
+                            m_differentialDrive.arcadeDrive(-KICKBACK_SPEED, 0);
                         }
                     }
                     // balanced
                     else if (m_state == 8) {
                         m_armMotor.set(0.0);
-                        if (m_imu.getYComplementaryAngle() <= -Threshold) {
-                            m_state = 6;
+                        if (m_imu.getYComplementaryAngle() <= -THRESHOLD) {
+                            m_state = 6; // jump to the 'leaning forward' state
                             m_timer.reset();
-                        } else if (m_imu.getYComplementaryAngle() >= Threshold) {
-                            m_state = 4;
+                        } else if (m_imu.getYComplementaryAngle() >= THRESHOLD) {
+                            m_state = 4; // jump to the 'leaning backward' state
                             m_timer.reset();
                         }
                         else{
