@@ -3,6 +3,7 @@ package frc.robot.Subsystems;
 import frc.robot.Constants;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -37,10 +38,16 @@ public class LauncherSubsystem extends SubsystemBase {
     }
 
     // sets motor speeds with the parameter launchSpeed
-    public static void setMotors(double launchSpeed) {
+    public static void setMotors(double launchSpeed, boolean spinShot) {
         SmartDashboard.putNumber("Left Speed", getLeftMotorSpeed());
         SmartDashboard.putNumber("Right Speed", getRightMotorSpeed());
-        launchMotorRight.set(launchSpeed);
+
+        launchSpeed = MathUtil.clamp(launchSpeed, 0, 1);
+        if(spinShot){
+            launchMotorRight.set(launchSpeed - 0.1);
+        } else {
+            launchMotorRight.set(launchSpeed);
+        }
         launchMotorLeft.set(launchSpeed);
     }
 }

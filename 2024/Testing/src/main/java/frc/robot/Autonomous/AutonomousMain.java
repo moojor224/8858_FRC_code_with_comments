@@ -388,10 +388,10 @@ public class AutonomousMain {
         double targetRightFrontPosition = rightFrontPosition - 5.4 * distance;
         while (Robot.getArmEncoderPosition() > 0.4 && !terminateAuton()) {
             if (IntakeSubsystem.limitSwitch.get()) {
-                ArmSubsystem.moveArmToTarget(0.125);
+                ArmSubsystem.armMotor.set(ArmSubsystem.moveArmToTarget(Constants.kArmFloorEncPos, Constants.kArmEncMargin));
                 ArmControls.intakeSpeed = Constants.kIntakeSpeed;
             } else {
-                ArmSubsystem.moveArmToTarget(0.715);
+                ArmSubsystem.armMotor.set(ArmSubsystem.moveArmToTarget(Constants.kArmLaunchEncPos, Constants.kArmEncMargin));
                 ArmControls.intakeSpeed = 0;
             }
             IntakeSubsystem.intakeMotor.set(ArmControls.intakeSpeed);
@@ -402,10 +402,10 @@ public class AutonomousMain {
             leftFrontPosition = DriveSubsystem.leftFrontMotor.getEncoder().getPosition();
             rightFrontPosition = DriveSubsystem.rightFrontMotor.getEncoder().getPosition();
             if (IntakeSubsystem.limitSwitch.get()) {
-                ArmSubsystem.moveArmToTarget(0.125);
+                ArmSubsystem.armMotor.set(ArmSubsystem.moveArmToTarget(Constants.kArmFloorEncPos, Constants.kArmEncMargin));
                 ArmControls.intakeSpeed = Constants.kIntakeSpeed;
             } else {
-                ArmSubsystem.moveArmToTarget(0.715);
+                ArmSubsystem.armMotor.set(ArmSubsystem.moveArmToTarget(Constants.kArmLaunchEncPos, Constants.kArmEncMargin));
                 ArmControls.intakeSpeed = 0;
             }
             IntakeSubsystem.intakeMotor.set(ArmControls.intakeSpeed);
@@ -445,14 +445,14 @@ public class AutonomousMain {
                 && !terminateAuton()) {
             DriveSubsystem.setMotors(0.0, 0.5);
             if(startShooter){
-            LauncherSubsystem.setMotors(Constants.kSpeakerShooterSpeed * 0.8);
+            LauncherSubsystem.setMotors(Constants.kSpeakerShooterSpeed * 0.8, false);
             }
             if(runIntake){
                 if (IntakeSubsystem.limitSwitch.get()) {
-                    ArmSubsystem.moveArmToTarget(0.125);
+                    ArmSubsystem.armMotor.set(ArmSubsystem.moveArmToTarget(Constants.kArmFloorEncPos, Constants.kArmEncMargin));
                     ArmControls.intakeSpeed = Constants.kIntakeSpeed;
                 } else {
-                    ArmSubsystem.moveArmToTarget(0.715);
+                    ArmSubsystem.armMotor.set(ArmSubsystem.moveArmToTarget(Constants.kArmLaunchEncPos, Constants.kArmEncMargin));
                     ArmControls.intakeSpeed = 0;
                 }
                 IntakeSubsystem.intakeMotor.set(ArmControls.intakeSpeed);
@@ -476,9 +476,9 @@ public class AutonomousMain {
             leftFrontPosition = DriveSubsystem.leftFrontMotor.getEncoder().getPosition();
             rightFrontPosition = DriveSubsystem.rightFrontMotor.getEncoder().getPosition();
             if (!IntakeSubsystem.limitSwitch.get()) {
-                ArmSubsystem.moveArmToTarget(0.715);
+                ArmSubsystem.armMotor.set(ArmSubsystem.moveArmToTarget(Constants.kArmLaunchEncPos, Constants.kArmEncMargin));
             } else {
-                ArmSubsystem.moveArmToTarget(0.125);
+                ArmSubsystem.armMotor.set(ArmSubsystem.moveArmToTarget(Constants.kArmFloorEncPos, Constants.kArmEncMargin));
                 ArmControls.intakeSpeed = 0;
             }
             IntakeSubsystem.intakeMotor.set(ArmControls.intakeSpeed);
@@ -550,11 +550,11 @@ public class AutonomousMain {
         if (terminateAuton()) {
             return;
         }
-        while (Math.abs(Robot.getArmEncoderPosition() - 0.715) >= 0.05 && !terminateAuton()) {
-            ArmSubsystem.moveArmToTarget(0.715);
+        while (Math.abs(Robot.getArmEncoderPosition() - Constants.kArmLaunchEncPos) >= 0.05 && !terminateAuton()) {
+            ArmSubsystem.armMotor.set(ArmSubsystem.moveArmToTarget(Constants.kArmLaunchEncPos, Constants.kArmEncMargin));
         }
         if (!terminateAuton()) {
-            LauncherSubsystem.setMotors(Constants.kSpeakerShooterSpeed * 0.8);
+            LauncherSubsystem.setMotors(Constants.kSpeakerShooterSpeed * 0.8, false);
             if(waitForStart){ 
                 Thread.sleep(2000);
             }
@@ -566,7 +566,7 @@ public class AutonomousMain {
             IntakeSubsystem.setMotor(-Constants.kIntakeSpeed);
             Thread.sleep(200);
         }
-        LauncherSubsystem.setMotors(0);
+        LauncherSubsystem.setMotors(0, false);
         IntakeSubsystem.setMotor(0);
     }
 
@@ -575,8 +575,8 @@ public class AutonomousMain {
         long now = Clock.systemUTC().millis();
         double direction = -0.5;
         ArmControls.intakeSpeed = 1 * Constants.kIntakeSpeed;
-        while (Math.abs(Robot.getArmEncoderPosition() - 0.715) >= 0.1 && !terminateAuton()) {
-            ArmSubsystem.moveArmToTarget(0.715);
+        while (Math.abs(Robot.getArmEncoderPosition() - Constants.kArmLaunchEncPos) >= 0.1 && !terminateAuton()) {
+            ArmSubsystem.armMotor.set(ArmSubsystem.moveArmToTarget(Constants.kArmLaunchEncPos, Constants.kArmEncMargin));
         }
         Thread.sleep(1000);
         while (!terminateAuton() && now - start < 1000) {

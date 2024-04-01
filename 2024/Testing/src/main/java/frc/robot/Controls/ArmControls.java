@@ -21,7 +21,7 @@ public class ArmControls extends SubsystemBase {
 
     public static final XboxController m_Controller = new XboxController(OperatorConstants.kDriverControllerPort);
 
-    public static SlewRateLimiter m_RateLimiter = new SlewRateLimiter(3.5);
+    public static SlewRateLimiter m_ArmRateLimiter = new SlewRateLimiter(1.5); // TODO : tune this value
 
     public static double armSpeed;
     public static double intakeSpeed;
@@ -69,12 +69,6 @@ public class ArmControls extends SubsystemBase {
     public static boolean autoArmMode = false; // start arm in manual control mode so that the arm doesn't move when initialized
 
     public static void armInput() {
-        // double distance = m_arm.m_encoder.getPosition() - position;
-
-        // m_arm.armMotor.set(m_arm.m_PIDController.calculate(distance, position));
-        // armSpeed = m_Controller.getRightTriggerAxis() -
-        // m_Controller.getLeftTriggerAxis();
-        limitedArmSpeed = m_RateLimiter.calculate(armSpeed);
 
         if (getTime() - rumbleStart < 500) {
             m_Controller.setRumble(RumbleType.kBothRumble, 1);
@@ -82,58 +76,44 @@ public class ArmControls extends SubsystemBase {
             m_Controller.setRumble(RumbleType.kBothRumble, 0.0);
         }
 
-        if (!IntakeSubsystem.limitSwitch.get() && lastState) {
+        if (IntakeSubsystem.limitSwitch.get() && lastState) {
             rumbleStart = getTime();
         }
         lastState = IntakeSubsystem.limitSwitch.get();
 
-        // Normal controls for the arm
-        // if (m_arm.armPosition < Constants.upperLimit ){
-        // armSpeed = .05 + m_Controller.getRightTriggerAxis();
-        // }
-        // else if (m_arm.armPosition > Constants.upperLimit){
-        // armSpeed = m_Controller.getRightTriggerAxis() -
-        // m_Controller.getLeftTriggerAxis();
-        // }
-        // else {
-        // armSpeed = m_Controller.getRightTriggerAxis() -
-        // m_Controller.getLeftTriggerAxis();
-        // }
-
-        // sets controls for intake
-        // if (m_Controller.getLeftBumper()) {
-        // intakeSpeed = -Constants.kIntakeSpeed;
-        // } else if (m_Controller.getRightBumper() &&
-        // IntakeSubsystem.limitSwitch.get()) {
-        // intakeSpeed = Constants.kIntakeSpeed;
-        // } else {
-        // intakeSpeed = 0;
-        // }
         if (m_Controller.getStartButtonPressed()) {
             autoArmMode = !autoArmMode; // toggle auto arm mode
         }
 
         if (autoArmMode) {
             double target;
-            if (!IntakeSubsystem.limitSwitch.get() || LauncherControls.activateLaunchSequence) {
-                target = 0.715;
-                ArmSubsystem.moveArmToTarget(target);
+            if (IntakeSubsystem.limitSwitch.get() || LauncherControls.activateLaunchSequence) {
+                // LAUNCH MODE
+                target = Constants.kArmLaunchEncPos;
+                armSpeed = ArmSubsystem.moveArmToTarget(target, Constants.kArmEncMargin);
                 if (!LauncherControls.activateLaunchSequence) {
                     intakeSpeed = 0;
                 }
             } else {
-                if (m_Controller.getRightBumper() && IntakeSubsystem.limitSwitch.get()) {
-                    target = 0.125;
-                    ArmSubsystem.moveArmToTarget(target);
+                if (m_Controller.getRightBumper() && !IntakeSubsystem.limitSwitch.get()) {
+                    // INTAKE MODE
+                    target = Constants.kArmFloorEncPos;
+                    armSpeed = ArmSubsystem.moveArmToTarget(target, Constants.kArmEncMargin);
                     intakeSpeed = Constants.kIntakeSpeed;
                 } else {
-                    // target = 0.42;
-                    target = 0.715;
+                    // EMPTY STORAGE MODE
+                    // target = Constants.kArmStowEncPos;
+                    target = Constants.kArmLaunchEncPos;
                     intakeSpeed = 0;
-                    ArmSubsystem.moveArmToTarget(target, 0.06);
+                    armSpeed = ArmSubsystem.moveArmToTarget(target, 0.06);
                 }
             }
             SmartDashboard.putNumber("Arm Target", target);
+
+            // feed the calculated arm speed through a rate-limiter and then set the armMotor
+            limitedArmSpeed = m_ArmRateLimiter.calculate(armSpeed);
+            ArmSubsystem.armMotor.set(limitedArmSpeed);
+
         } else {
             if (m_Controller.getLeftTriggerAxis() > 0.1 && Robot.getArmEncoderPosition() > 0.1) { // make sure arm is within safe operating range
                 ArmSubsystem.armMotor.set(MathUtil.clamp(m_Controller.getLeftTriggerAxis(), 0, 0.4)); // move towards ground
@@ -141,6 +121,13 @@ public class ArmControls extends SubsystemBase {
                 ArmSubsystem.armMotor.set(-MathUtil.clamp(m_Controller.getRightTriggerAxis(), 0, 0.4)); // move towards shoot
             } else {
                 ArmSubsystem.armMotor.set(0);
+            }
+
+            // intake controls in manual arm mode
+            if (m_Controller.getRightBumper()){
+                intakeSpeed = Constants.kIntakeSpeed;
+            } else {
+                intakeSpeed = 0;
             }
         }
     }

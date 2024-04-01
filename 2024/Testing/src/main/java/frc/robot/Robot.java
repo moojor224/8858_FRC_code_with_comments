@@ -246,7 +246,7 @@ public class Robot extends TimedRobot {
         HangingSubsystem.setMotors(HangerControls.leftHangSpeed, HangerControls.rightHangSpeed);
         ArmSubsystem.setMotor(ArmControls.limitedArmSpeed * Constants.kArmLimiter);
         IntakeSubsystem.setMotor(ArmControls.intakeSpeed);
-        LauncherSubsystem.setMotors(LauncherControls.launchSpeed);
+        LauncherSubsystem.setMotors(LauncherControls.launchSpeed, LauncherControls.spinShot);
 
         // System.out.println(m_arm.m_encoder.getPosition());
 

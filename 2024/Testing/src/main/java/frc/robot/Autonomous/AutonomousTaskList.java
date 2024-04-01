@@ -74,12 +74,20 @@ public class AutonomousTaskList {
     public static Task MoveArmToTargetTask(double target) {
         return new Task(() -> {
             SmartDashboard.putString("currently running task", "move arm to target");
-            return ArmSubsystem.moveArmToTarget(target, 0.05);
+            double speed = ArmSubsystem.moveArmToTarget(target, 0.05);
+            ArmSubsystem.armMotor.set(speed);
+
+            // if speed is less than 50% of the safety speed, then the target position has been reached.
+            if ((speed < (0.5 * Constants.kArmSafetySpeed)) && (speed > -(0.5 * Constants.kArmSafetySpeed))){
+                return true;
+            } else {
+                return false;
+            }
         });
     }
 
     public static Task SpinUpShooters() {
-        return SpinUpShooters(4300);
+        return SpinUpShooters(Constants.kTargetSpeakerVelocity);
     }
 
     public static Task SpinUpShooters(double velocity) {

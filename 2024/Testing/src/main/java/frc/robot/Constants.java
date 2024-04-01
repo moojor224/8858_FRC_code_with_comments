@@ -48,6 +48,15 @@ public final class Constants {
     // Arm
     public static final int kArmMotor = 7;
 
+    public static final double kArmDefaultSpeed = 0.4; // use this when arm is far away from target position
+    public static final double kArmSafetySpeed = 0.15; // use this when arm is approaching target position
+
+    public static final double kArmStowEncPos   = 0.420;
+    public static final double kArmLaunchEncPos = 0.715;
+    public static final double kArmFloorEncPos  = 0.125;
+    public static final double kArmEncMargin    = 0.01;
+
+
     public static final double kArmLimiter = .5;
 
     public static final double armP = .12;
@@ -77,6 +86,6 @@ public final class Constants {
     public static final double kAmpShooterSpeed = 0.9 * kTargetAmpVelocity / 4400;
 
     // YEET Speed defines Shooter
-    public static final double kTargetYeetVelocity = 5500;
+    public static final double kTargetYeetVelocity = 5000;
     public static final double kYeetShooterSpeed = 0.9 * kTargetYeetVelocity / 4400;
 }
