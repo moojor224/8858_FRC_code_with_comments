@@ -229,7 +229,7 @@ public class Robot extends TimedRobot {
         // move hangers to target position
 
         // read controller joysticks
-        double xSpeed = m_Controller.getLeftX();
+        double xSpeed = m_Controller.getRightX();
         double ySpeed = m_Controller.getLeftY();
 
         // add deadzone to center of joysticks

@@ -445,7 +445,7 @@ public class AutonomousMain {
                 && !terminateAuton()) {
             DriveSubsystem.setMotors(0.0, 0.5);
             if(startShooter){
-            LauncherSubsystem.setMotors(Constants.kSpeakerLaunchSpeed * 0.8);
+            LauncherSubsystem.setMotors(Constants.kSpeakerShooterSpeed * 0.8);
             }
             if(runIntake){
                 if (IntakeSubsystem.limitSwitch.get()) {
@@ -554,7 +554,7 @@ public class AutonomousMain {
             ArmSubsystem.moveArmToTarget(0.715);
         }
         if (!terminateAuton()) {
-            LauncherSubsystem.setMotors(Constants.kSpeakerLaunchSpeed * 0.8);
+            LauncherSubsystem.setMotors(Constants.kSpeakerShooterSpeed * 0.8);
             if(waitForStart){ 
                 Thread.sleep(2000);
             }

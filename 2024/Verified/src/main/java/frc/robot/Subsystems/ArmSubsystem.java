@@ -31,16 +31,19 @@ public class ArmSubsystem extends SubsystemBase {
 
     public static boolean moveArmToTarget(double position, double marginError) {
         if (Math.abs(Robot.getArmEncoderPosition() - position) <= marginError) {
+            // arm has reached target position
             armMotor.set(0);
             return true;
         } else if (Robot.getArmEncoderPosition() > position) {
+            // arm is moving towards intake position here
             if (Robot.getArmEncoderPosition() - position > 0.1) {
                 armMotor.set(0.4);
             } else {
                 armMotor.set(0.2);
             }
         } else if (Robot.getArmEncoderPosition() < position) {
-            if (Robot.getArmEncoderPosition() - position < 0.2) {
+            // arm is moving towards launcher here
+            if (position - Robot.getArmEncoderPosition() > 0.2) {
                 armMotor.set(-0.4);
             } else {
                 armMotor.set(-0.2);

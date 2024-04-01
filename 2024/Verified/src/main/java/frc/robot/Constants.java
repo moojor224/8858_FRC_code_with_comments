@@ -68,7 +68,15 @@ public final class Constants {
 
     public static final double kSpeakerLaunchSpeed = .9;
 
-    // Amp Shooter
+    // Speaker Speed Defines
+    public static final double kTargetSpeakerVelocity = 4400;
+    public static final double kSpeakerShooterSpeed = 0.9 * kTargetSpeakerVelocity / 4400;
+
+    // Amp Speed Defines
     public static final double kTargetAmpVelocity = 700;
     public static final double kAmpShooterSpeed = 0.9 * kTargetAmpVelocity / 4400;
+
+    // YEET Speed defines Shooter
+    public static final double kTargetYeetVelocity = 5500;
+    public static final double kYeetShooterSpeed = 0.9 * kTargetYeetVelocity / 4400;
 }

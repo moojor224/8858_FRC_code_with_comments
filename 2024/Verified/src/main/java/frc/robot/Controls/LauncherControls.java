@@ -30,8 +30,8 @@ public class LauncherControls extends SubsystemBase {
 
     public static void launcherInput() {
         if (m_Controller.getBButtonPressed() && !activateLaunchSequence) {
-            launchSpeed = Constants.kSpeakerLaunchSpeed;
-            targetRPM = 4300;
+            launchSpeed = Constants.kSpeakerShooterSpeed;
+            targetRPM = Constants.kTargetSpeakerVelocity;
             activateLaunchSequence = true;
             start = AutonomousMain.getTime();
         }
@@ -41,11 +41,16 @@ public class LauncherControls extends SubsystemBase {
             activateLaunchSequence = true;
             start = AutonomousMain.getTime();
         }
+        if (m_Controller.getLeftBumperPressed() && !activateLaunchSequence) {
+            launchSpeed = Constants.kYeetShooterSpeed;
+            targetRPM = Constants.kTargetYeetVelocity;
+            activateLaunchSequence = true;
+            start = AutonomousMain.getTime();
+        }
         // if (!activateLaunchSequence || Clock.systemUTC().millis() - time > 2000) {
         // launchSpeed = 0;
         // }
-        if (activateLaunchSequence && (LauncherSubsystem.getLeftMotorSpeed() > targetRPM
-                && LauncherSubsystem.getRightMotorSpeed() > targetRPM || AutonomousMain.getTime() - start > 2500)) {
+        if (activateLaunchSequence && ((LauncherSubsystem.getLeftMotorSpeed() > targetRPM) && (LauncherSubsystem.getRightMotorSpeed() > targetRPM) || (AutonomousMain.getTime() - start > 2500))) {
             IntakeSubsystem.intakeMotor.set(-Constants.kIntakeSpeed);
             ArmControls.intakeSpeed = -Constants.kIntakeSpeed;
             if (time == 0) {
