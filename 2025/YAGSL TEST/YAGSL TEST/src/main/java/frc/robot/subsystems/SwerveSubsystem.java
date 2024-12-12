@@ -16,7 +16,6 @@ import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
 import frc.robot.Constants;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 
 public class SwerveSubsystem extends SubsystemBase {
     /** Creates a new Subsystem. */
@@ -30,21 +29,6 @@ public class SwerveSubsystem extends SubsystemBase {
         } catch (Exception e){
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * Example command factory method.
-     *
-     * @return a command
-     */
-    public Command exampleMethodCommand() {
-        // Inline construction of command goes here.
-        // Subsystem::RunOnce implicitly requires `this` subsystem.
-        return runOnce(
-            () -> {
-            /* one-time action goes here */
-            }
-        );
     }
 
     /**
