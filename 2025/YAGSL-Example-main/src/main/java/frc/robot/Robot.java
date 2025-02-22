@@ -7,8 +7,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.subsystems.swervedrive.ClimberSubsystem;
+import frc.robot.subsystems.swervedrive.ElevatorSubsystem;
+import frc.robot.subsystems.swervedrive.IntakeSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as
@@ -24,6 +29,8 @@ public class Robot extends TimedRobot
   private RobotContainer m_robotContainer;
 
   private Timer disabledTimer;
+  
+  public static XboxController controller = new XboxController(0);
 
   public Robot()
   {
@@ -139,6 +146,57 @@ public class Robot extends TimedRobot
   @Override
   public void teleopPeriodic()
   {
+  //   if (controller.getYButton() == true){
+  //       ClimberSubsystem.leftClimbMotor.set(0.1);
+  //       ClimberSubsystem.rightClimbMotor.set(0.1);
+  //  }
+  //   else if (controller.getAButton() == true){
+  //     ClimberSubsystem.leftClimbMotor.set(-0.1);
+  //     ClimberSubsystem.rightClimbMotor.set(-0.1);
+  //  }
+  //  else{
+  //   ClimberSubsystem.leftClimbMotor.set(0);
+  //   ClimberSubsystem.rightClimbMotor.set(0);
+  //  }
+
+   if (controller.getLeftBumperButton() == true){
+    ElevatorSubsystem.leftElevatorMotor.set(-0.1);
+    ElevatorSubsystem.rightElevatorMotor.set(0.1);
+   }
+   else if (controller.getRightBumperButton() == true){
+    ElevatorSubsystem.leftElevatorMotor.set(0.1);
+    ElevatorSubsystem.rightElevatorMotor.set(-0.1);
+   }
+   else{
+    ElevatorSubsystem.leftElevatorMotor.set(0);
+    ElevatorSubsystem.rightElevatorMotor.set(0);
+   }
+
+   if (controller.getPOV() == 0){//dpadDirection == 0
+    IntakeSubsystem.wristMotor.set(0.9);
+   }
+   else if (controller.getPOV() == 180){//dpadDirection == 180
+    IntakeSubsystem.wristMotor.set(-0.9);
+   }
+   else{
+    IntakeSubsystem.wristMotor.set(0);
+  }
+  
+   if (controller.getLeftTriggerAxis() >= 0.3){
+    IntakeSubsystem.leftAlgaeIntakeMotor.set(0.1);
+    IntakeSubsystem.rightAlgaeIntakeMotor.set(0.1);
+    IntakeSubsystem.coralIntakeMotor.set(-0.1);
+   }
+   else if (controller.getRightTriggerAxis() >= 0.3){
+    IntakeSubsystem.leftAlgaeIntakeMotor.set(-0.1);
+    IntakeSubsystem.rightAlgaeIntakeMotor.set(-0.1);
+    IntakeSubsystem.coralIntakeMotor.set(0.1);
+   }
+   else{
+    IntakeSubsystem.leftAlgaeIntakeMotor.set(0);
+    IntakeSubsystem.rightAlgaeIntakeMotor.set(0);
+    IntakeSubsystem.coralIntakeMotor.set(0);
+   }
   }
 
   @Override
