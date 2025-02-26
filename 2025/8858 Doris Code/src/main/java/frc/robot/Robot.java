@@ -170,28 +170,6 @@ public class Robot extends TimedRobot {
         // ElevatorSubsystem.rightElevatorMotor.set(0);
         // }
 
-        // if (controller.getPOV() == 0){//dpadDirection == 0
-        // IntakeSubsystem.wristMotor.set(0.9);
-        // } else if (controller.getPOV() == 180) {//dpadDirection == 180
-        // IntakeSubsystem.wristMotor.set(-0.9);
-        // } else {
-        // IntakeSubsystem.wristMotor.set(0);
-        // }
-
-        // if (controller.getLeftTriggerAxis() >= 0.3){
-        // IntakeSubsystem.leftAlgaeIntakeMotor.set(0.1);
-        // IntakeSubsystem.rightAlgaeIntakeMotor.set(0.1);
-        // IntakeSubsystem.coralIntakeMotor.set(-0.1);
-        // } else if (controller.getRightTriggerAxis() >= 0.3) {
-        // IntakeSubsystem.leftAlgaeIntakeMotor.set(-0.1);
-        // IntakeSubsystem.rightAlgaeIntakeMotor.set(-0.1);
-        // IntakeSubsystem.coralIntakeMotor.set(0.1);
-        // } else {
-        // IntakeSubsystem.leftAlgaeIntakeMotor.set(0);
-        // IntakeSubsystem.rightAlgaeIntakeMotor.set(0);
-        // IntakeSubsystem.coralIntakeMotor.set(0);
-        // }
-
         // SmartDashboard.putNumber("Elevator (left)",
         // m_robotContainer.elevatorSubsystem.getEncoderPosition());
     }
