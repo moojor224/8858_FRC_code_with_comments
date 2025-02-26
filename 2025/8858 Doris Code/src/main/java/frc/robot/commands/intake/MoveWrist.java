@@ -1,26 +1,26 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.swervedrive.IntakeSubsystem;
+import frc.robot.subsystems.swervedrive.WristSubsystem;
 
 public class MoveWrist extends Command {
-    private final IntakeSubsystem intakeSubsystem;
+    private final WristSubsystem coralSubsystem;
     private final double speed;
 
-    public MoveWrist(IntakeSubsystem intakeSubsystem, double speed) {
-        this.intakeSubsystem = intakeSubsystem;
+    public MoveWrist(WristSubsystem intakeSubsystem, double speed) {
+        this.coralSubsystem = intakeSubsystem;
         this.speed = speed;
         addRequirements(intakeSubsystem);
     }
 
     @Override
     public void initialize(){
-        intakeSubsystem.resetPID();
+        coralSubsystem.resetPID();
     }
 
     @Override
     public void execute(){
-        intakeSubsystem.MoveWrist(speed);
+        coralSubsystem.MoveWrist(speed);
     }
 
     @Override
@@ -30,6 +30,6 @@ public class MoveWrist extends Command {
 
     @Override
     public void end(boolean interrupted){
-        intakeSubsystem.MoveWrist(0);
+        coralSubsystem.MoveWrist(0);
     }
 }
