@@ -161,11 +161,11 @@ public class RobotContainer {
             /*
             Notes for controls:
 
-            .onTrue() will run a command once when the nutton is initially pressed
-            .onFalse() will run a command once when the button is released
+            .onTrue() will run a command the button is initially pressed
+            .onFalse() will run a command when the button is released
             
-            .whileTrue() will run a command repeatedly while the button is held down
-            .whileFalse() will run a command repeatedly while the button is not held down
+            .whileTrue() will run a command when the button is pressed and cancel it when the button is released
+            .whileFalse() will run a command when the button is released and cancel it when the button is pressed
 
             a ParallelCommandGroup will run multiple commands at the same time until the last command in the list finishes
 
