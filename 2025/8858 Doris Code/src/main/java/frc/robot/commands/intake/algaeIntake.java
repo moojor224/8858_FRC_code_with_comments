@@ -9,7 +9,7 @@ public class algaeIntake extends Command {
 
     public algaeIntake(AlgaeSubsystem algaeSubsystem, double speed) {
         this.algaeSubsystem = algaeSubsystem;
-        this.speed = speed;
+        this.speed = speed; // motor speed
         addRequirements(algaeSubsystem); // add requirement so that multiple commands using the same subsystem don't run at the same time
     }
 
@@ -18,17 +18,17 @@ public class algaeIntake extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() { // runs periodically while the command is scheduled
         algaeSubsystem.algaeIntake(speed);
     }
 
     @Override
-    public boolean isFinished() {
-        return false;
+    public boolean isFinished() { // check if the command should stop running
+        return false; // never finish
     }
 
     @Override
-    public void end(boolean interrupted) {
+    public void end(boolean interrupted) { // runs when the command ends
         if (speed < 0) {
             algaeSubsystem.algaeIntake(-0.05);
         } else {

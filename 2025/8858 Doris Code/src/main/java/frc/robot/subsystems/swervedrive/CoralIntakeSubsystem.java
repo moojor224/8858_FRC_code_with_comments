@@ -11,10 +11,12 @@ public class CoralIntakeSubsystem extends SubsystemBase {
     public static CoralIntakeSubsystem coral_intake_instance;
 
     public CoralIntakeSubsystem() {
+        // initialize motor
         coralIntakeMotor = new SparkMax(21, MotorType.kBrushless);
-        coral_intake_instance = this;
+        coral_intake_instance = this; // save subsystem so it can be accessed anywhere
     }
 
+    /** move intake at speed */
     public void coralIntake(double speed) {
         coralIntakeMotor.set(speed);
     }

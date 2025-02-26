@@ -12,11 +12,13 @@ public class AlgaeSubsystem extends SubsystemBase {
     public static AlgaeSubsystem algae_intake_instance;
 
     public AlgaeSubsystem() {
+        // initialize motors
         leftAlgaeIntakeMotor = new SparkMax(18, MotorType.kBrushless);
         rightAlgaeIntakeMotor = new SparkMax(19, MotorType.kBrushless);
-        algae_intake_instance = this;
+        algae_intake_instance = this; // save subsystem so it can be accessed anywhere
     }
 
+    /** move intake at speed */
     public void algaeIntake(double speed) {
         leftAlgaeIntakeMotor.set(speed);
         rightAlgaeIntakeMotor.set(-speed);
